@@ -1,14 +1,21 @@
-const { response } = require("express");
-const { get } = require("../routes/api");
 
 let db;
+let budgetVersion;
 
 // Create a new request for a database
-const request = indexed.db.open('BudgetDB', 1);
+const request = indexed.db.open('BudgetDB', budgetVersion || 1);
 
 request.onupgradeneeded = function (event) {
-    const db = event.target.result;
-    db.createObjectStore("BudgetStore", { autoIncrement: true });
+    const { oldVersion } = event;
+    const newVersion = event.newVersion || db.version;
+
+    console.log(`DB updated from version ${oldversion} tp ${newVersion}`)
+
+
+    db = event.target.result;
+    if (db.objectStore.length === 0) {
+        db.createObjectStore("BudgetStore", { autoIncrement: true });
+    }
 };
 
 request.onerror = function (event) {
