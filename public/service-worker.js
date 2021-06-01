@@ -2,7 +2,9 @@ const FILES_TO_CACHE = [
     "/",
     "/index.html",
     "/index.js",
-    "/style.css"
+    "/style.css",
+    "/db.js",
+    "/manifest.webmanifest",
 ];
 
 const PRECACHE = 'precache-v1';
