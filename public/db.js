@@ -3,17 +3,23 @@ let db;
 let budgetVersion;
 
 // Create a new request for a database
-const request = indexed.db.open('BudgetDB', budgetVersion || 1);
+const request = indexedDB.open('BudgetDB', budgetVersion || 15);
 
-request.onupgradeneeded = function (event) {
+request.onupgradeneeded = event => {
+    console.log('Upgrade neede in IndexDB.');
+
+
+
+
     const { oldVersion } = event;
     const newVersion = event.newVersion || db.version;
 
-    console.log(`DB updated from version ${oldversion} tp ${newVersion}`)
+    console.log(`DB has been updated from version ${oldVersion} to ${newVersion}`)
 
 
     db = event.target.result;
-    if (db.objectStore.length === 0) {
+
+    if (db.objectStoreNames.length === 0) {
         db.createObjectStore("BudgetStore", { autoIncrement: true });
     }
 };
@@ -22,7 +28,7 @@ request.onerror = function (event) {
     console.log("There has been an error retrieving your data", event.target.errorCode);
 };
 
-function checkDatabase() {
+const checkDatabase = () => {
     // opens a transaction on the BudgetStore
     let transaction = db.transaction(['BudgetStore'], 'readwrite');
     // Opens the BudgetStore object
@@ -67,8 +73,9 @@ request.onsuccess = event => {
     }
 };
 
-function saveRecord(record) {
+const saveRecord = record => {
     console.log('Save record invoked');
+
     const transaction = db.transaction(['BudgetStore'], 'readwrite');
 
     const store = transaction.objectStore('BudgetStore');
